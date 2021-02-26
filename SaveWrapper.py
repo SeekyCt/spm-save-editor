@@ -7,8 +7,17 @@ Save Structure:
 
 SPMARIO_GLOBALS_OFFSET = 0x8
 SPMARIO_GLOBALS_SIZE = 0x1b08
+
 POUCH_WORK_OFFSET = 0x1b10
 POUCH_WORK_SIZE = 0x6a0
+
+POUCH_LEVEL_OFFSET  = POUCH_WORK_OFFSET + 0x4
+POUCH_ATTACK_OFFSET = POUCH_WORK_OFFSET + 0x8
+POUCH_HP_OFFSET     = POUCH_WORK_OFFSET + 0xc
+POUCH_MAX_HP_OFFSET = POUCH_WORK_OFFSET + 0x10
+POUCH_XP_OFFSET     = POUCH_WORK_OFFSET + 0x18
+POUCH_COINS_OFFSET  = POUCH_WORK_OFFSET + 0x1c
+
 SAVE_DATA_SIZE = 0x25b0
 SAVE_FILE_SIZE = SAVE_DATA_SIZE + 8
 
@@ -36,3 +45,14 @@ class SaveWrapper:
     def toBinary(self):
         checksum = self.calcChecksum()
         return bytearray(self.data + word(checksum) + word(~checksum & 0xffffffff))
+
+    def writeWord(self, offset, val):
+        b = word(val)
+        self.data[offset] = b[0]
+        self.data[offset+1] = b[1]
+        self.data[offset+2] = b[2]
+        self.data[offset+3] = b[3]
+    
+    def readWord(self, offset):
+        b = self.data[offset:offset+4]
+        return int.from_bytes(b, "big")
