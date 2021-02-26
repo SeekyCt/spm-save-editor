@@ -33,7 +33,7 @@ class SaveWrapper:
             dat = f.read()
             f.close()
             assert len(dat) == SAVE_FILE_SIZE, "Invalid sized save file"
-            self.data = dat[0:SAVE_DATA_SIZE]
+            self.data = bytearray(dat[0:SAVE_DATA_SIZE])
 
     def calcChecksum(self):
         s = 0
